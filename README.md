@@ -1,14 +1,14 @@
-# 🧠 CoreLogger - AI Interaction Monitoring & Analysis System
+# CoreLogger - AI Interaction Monitoring & Analysis System
 
-## 🌟 Overview
+## Overview
 
 CoreLogger is a sophisticated AI conversation monitoring and analysis system designed for tracking, analyzing, and understanding AI interactions. Built with production-grade features, it provides comprehensive tools for capturing AI conversations, detecting emotions, and analyzing interaction patterns using advanced NLP techniques.
 
 **Primary Focus**: Automatic monitoring and analysis of AI conversations with real-time emotion detection and comprehensive logging.
 
-## ✨ Features
+## Features
 
-### 🎯 Core Functionality
+### Core Functionality
 - **AI Interaction Monitoring**: Automatic logging of AI conversations with emotion detection
 - **Real-time Chat Interface**: Interactive conversations with AI providers (Web + CLI)
 - **Advanced NLP Analysis**: Sentiment analysis, novelty detection, complexity scoring
@@ -17,22 +17,22 @@ CoreLogger is a sophisticated AI conversation monitoring and analysis system des
 - **CLI Export System**: Data export in JSON/CSV formats (CLI only)
 - **Real-time Streaming**: Token-by-token AI responses with Rich console rendering
 
-### 🤖 AI Providers
+### AI Providers
 - **Google Gemini** - Advanced language understanding
 - **OpenAI GPT** - Industry-leading conversational AI  
 - **Anthropic Claude** - Thoughtful and nuanced responses
 - **Mock Provider** - Development and testing support
 
-### 🧠 Advanced NLP Features
+### Advanced NLP Features
 - **Emotion Detection**: 9-category emotion classification for user messages and AI responses
 - **Importance Scoring**: Multi-factor importance calculation using NLP metrics
-- **Conversation Categorization**: Automatic classification (user-input 👤, ai-response 🤖, conversation 💬)
+- **Conversation Categorization**: Automatic classification (user-input, ai-response, conversation)
 - **Sentiment Analysis**: Emotional tone and strength analysis
 - **Complexity Scoring**: Text complexity based on vocabulary and structure
 - **Keyword Extraction**: Automatic keyword identification and density analysis
 - **Conversation Context**: Three-tier logging for complete interaction tracking
 
-### 🌐 Web Dashboard
+### Web Dashboard
 - **Dark Theme Interface**: GitHub-style responsive design optimized for readability
 - **AI Interaction Dashboard**: Overview of recent conversations and system statistics
 - **Live Chat Interface**: Real-time AI conversation with automatic logging
@@ -41,7 +41,7 @@ CoreLogger is a sophisticated AI conversation monitoring and analysis system des
 - **Category Filtering**: Filter by user-input, ai-response, or complete conversations
 - **Real-time Statistics**: Live updates of interaction counts and patterns
 
-### 🖥️ CLI Features
+### CLI Features
 - **Interactive AI Chat**: Full-featured chat with multiple AI providers
 - **Automatic Logging**: All conversations automatically saved with metadata
 - **Rich Formatting**: Beautiful console output with colors, tables, and progress indicators
@@ -52,7 +52,7 @@ CoreLogger is a sophisticated AI conversation monitoring and analysis system des
 - **NLP Analysis**: Analyze individual conversations with detailed metrics
 - **Bulk Operations**: Recalculate importance scores for existing entries
 
-## 🚀 Installation
+## Installation
 
 ### Prerequisites
 - Python 3.8+
@@ -80,7 +80,11 @@ python corelogger.py chat --model gemini
 
 # Start web interface
 python main.py
-# Access at http://localhost:8000/dashboard
+Access the web dashboard at `http://localhost:8000/dashboard`
+
+## Architecture
+
+## Architecture
 ```
 
 ### Environment Configuration
@@ -99,7 +103,7 @@ DATABASE_URL=sqlite:///./corelogger.db
 LOG_LEVEL=INFO
 ```
 
-## 📖 Usage Guide
+## Usage Guide
 
 ### Command Line Interface
 
@@ -169,7 +173,7 @@ uvicorn main:app --reload --port 8000
 
 **Note**: Export functionality will be added in future updates. Currently available through CLI only.
 
-## 🏗️ Architecture
+## Architecture
 
 ### Project Structure
 ```
@@ -222,9 +226,9 @@ Real-time conversation with automatic logging:
 # CLI Interface: python corelogger.py chat --model gemini
 
 # All conversations automatically logged with:
-# - User message (👤 user-input category)
-# - AI response (🤖 ai-response category) 
-# - Complete conversation (💬 conversation category)
+# - User message (user-input category)
+# - AI response (ai-response category) 
+# - Complete conversation (conversation category)
 # - Emotion detection for each message
 # - Importance scoring and NLP analysis
 ```
@@ -262,27 +266,29 @@ class ThoughtModel:
     timestamp: datetime        # When the interaction occurred
 ```
 
-## 🎨 Current Capabilities
+## Current Capabilities
 
 ### Core Features (Fully Implemented)
-- ✅ **AI Chat Interface** (CLI + Web)
-- ✅ **Automatic Conversation Logging** 
-- ✅ **9-Category Emotion Detection**
-- ✅ **Dark Theme Web Dashboard**
-- ✅ **Real-time Statistics**
-- ✅ **NLP Analysis & Importance Scoring**
-- ✅ **Data Export** (CLI only)
-- ✅ **Rich Console Formatting**
-- ✅ **Multiple AI Provider Support**
+- **AI Chat Interface** (CLI + Web)
+- **Automatic Conversation Logging** 
+- **9-Category Emotion Detection**
+- **Dark Theme Web Dashboard**
+- **Real-time Statistics**
+- **NLP Analysis & Importance Scoring**
+- **Data Export** (CLI only)
+- **Rich Console Formatting**
+- **Multiple AI Provider Support**
 
 ### Planned Features
-- 🔄 **Web Export Functionality**
-- 🔄 **Advanced Conversation Analytics**
-- 🔄 **Conversation Search & Filtering**
-- 🔄 **Data Visualization Charts**
-- 🔄 **OpenAI & Claude Provider Integration**
+- **Web Export Functionality**
+- **Advanced Conversation Analytics**
+- **Conversation Search & Filtering**
+- **Data Visualization Charts**
+- **OpenAI & Claude Provider Integration**
 
-## 🔧 Configuration
+```
+
+## Configuration
 
 ### Environment Variables
 CoreLogger uses environment variables for configuration:
@@ -320,7 +326,7 @@ python corelogger.py chat --model gemini --api-key "your_key_here"
 python corelogger.py chat --model mock
 ```
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests
@@ -376,7 +382,7 @@ python corelogger.py export --format json --output my_ai_conversations.json
 python corelogger.py analyze <conversation-id>
 ```
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -398,11 +404,11 @@ black .
 isort .
 ```
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **FastAPI**: Modern Python web framework for the dashboard
 - **Typer**: Beautiful CLI framework with Rich integration
@@ -412,13 +418,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Jinja2**: Template engine for web interface
 - **Bootstrap**: Frontend framework for responsive design
 
-## 📞 Support
+## Support
 
 For support, please open an issue on GitHub.
 
 ---
 
-**CoreLogger** - Monitor and analyze your AI interactions with sophisticated emotion detection and NLP analysis. 🧠✨
+**CoreLogger** - Monitor and analyze your AI interactions with sophisticated emotion detection and NLP analysis.
 
 ### Setup
 
@@ -677,7 +683,7 @@ isort .
 mypy .
 ```
 
-## 🔮 Future Development
+## Future Development
 
 ### Planned Enhancements
 - **Web Export**: Direct export functionality from web interface
@@ -710,12 +716,12 @@ The modular design allows easy extension:
 - Test new functionality thoroughly
 - Use descriptive commit messages
 
-## 📊 Current Status
+## Current Status
 
 **Version**: 1.0.0 (Production Ready)
-**Status**: ✅ Fully Functional
+**Status**: Fully Functional
 
-### ✅ Completed Features
+### Completed Features
 - CLI AI chat with emotion detection
 - Web dashboard with real-time updates
 - Automatic conversation logging
@@ -725,19 +731,19 @@ The modular design allows easy extension:
 - Dark theme web interface
 - Multiple AI provider support (Gemini + Mock)
 
-### 🔄 In Development
+### In Development
 - Web export functionality
 - Advanced conversation analytics
 - Additional AI provider integrations
 
-## 📈 Version History
+## Version History
 
 ### v1.0.0 (Current)
-- ✅ Production-ready AI conversation monitoring
-- ✅ Complete emotion detection system
-- ✅ Web and CLI interfaces fully functional
-- ✅ Automatic database logging
-- ✅ NLP analysis and importance scoring
+- Production-ready AI conversation monitoring
+- Complete emotion detection system
+- Web and CLI interfaces fully functional
+- Automatic database logging
+- NLP analysis and importance scoring
 
 ### Future Versions
 - v1.1.0: Web export functionality
@@ -746,4 +752,4 @@ The modular design allows easy extension:
 
 ---
 
-**CoreLogger** - AI Interaction Monitoring Made Simple 🤖📊
+**CoreLogger** - AI Interaction Monitoring Made Simple
