@@ -31,10 +31,10 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/eidos-ai/corelogger"
-Documentation = "https://github.com/eidos-ai/corelogger#readme"
-Repository = "https://github.com/eidos-ai/corelogger.git"
-"Bug Tracker" = "https://github.com/eidos-ai/corelogger/issues"
+Homepage = "https://github.com/MrBrightsidedev/CoreLogger"
+Documentation = "https://github.com/MrBrightsidedev/CoreLogger#readme"
+Repository = "https://github.com/MrBrightsidedev/CoreLogger.git"
+"Bug Tracker" = "https://github.com/MrBrightsidedev/CoreLogger/issues"
 
 dependencies = [
     "typer[all]>=0.9.0",
