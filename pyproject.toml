@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "corelogger"
+name = "corelogger_ai"
 version = "1.0.0"
 description = "CoreLogger - Production-Ready AI Thought Monitoring & Analysis System"
 authors = [
@@ -29,13 +29,6 @@ classifiers = [
     "Environment :: Console",
     "Environment :: Web Environment",
 ]
-
-[project.urls]
-Homepage = "https://github.com/MrBrightsidedev/CoreLogger"
-Documentation = "https://github.com/MrBrightsidedev/CoreLogger#readme"
-Repository = "https://github.com/MrBrightsidedev/CoreLogger.git"
-"Bug Tracker" = "https://github.com/MrBrightsidedev/CoreLogger/issues"
-
 dependencies = [
     "typer[all]>=0.9.0",
     "fastapi>=0.109.0",
@@ -49,6 +42,12 @@ dependencies = [
     "jinja2>=3.1.0",
     "google-generativeai>=0.8.3",
 ]
+
+[project.urls]
+Homepage = "https://github.com/MrBrightsidedev/CoreLogger"
+Documentation = "https://github.com/MrBrightsidedev/CoreLogger#readme"
+Repository = "https://github.com/MrBrightsidedev/CoreLogger.git"
+"Bug Tracker" = "https://github.com/MrBrightsidedev/CoreLogger/issues"
 
 [project.optional-dependencies]
 ai = [

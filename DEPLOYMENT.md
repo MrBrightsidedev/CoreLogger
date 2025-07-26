@@ -63,10 +63,10 @@ twine upload dist/*
 ### 4. Install from PyPI
 ```bash
 # Once published, users can install with:
-pip install corelogger
+pip install corelogger_ai
 
 # Or with AI capabilities:
-pip install "corelogger[ai]"
+pip install "corelogger_ai[ai]"
 ```
 
 ## Pre-Deployment Checklist
@@ -132,7 +132,7 @@ corelogger = "corelogger:main"
 ### For End Users
 ```bash
 # Basic installation
-pip install corelogger
+pip install corelogger_ai
 
 # Start CLI
 corelogger --help
@@ -159,7 +159,7 @@ isort .
 
 ## PyPI Package Information
 
-- **Package Name**: `corelogger`
+- **Package Name**: `corelogger_ai`
 - **Version**: `1.0.0` (Production Ready)
 - **Python Support**: 3.10, 3.11, 3.12, 3.13
 - **License**: MIT
@@ -216,4 +216,4 @@ The CoreLogger package is fully prepared for PyPI distribution with:
 - Extensive feature set
 - Cross-platform compatibility
 
-Users will be able to install and use CoreLogger immediately after PyPI publication with a simple `pip install corelogger` command.
+Users will be able to install and use CoreLogger immediately after PyPI publication with a simple `pip install corelogger_ai` command.
