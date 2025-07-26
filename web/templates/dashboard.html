@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="text-primary">{{ total_thoughts }}</h3>
+                <small class="text-muted">Total AI Interactions</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="text-success">{{ today_thoughts }}</h3>
+                <small class="text-muted">Today's AI Interactions</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="text-info">{{ recent_thoughts|length }}</h3>
+                <small class="text-muted">Recent Items</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">
+            <i class="fas fa-history"></i> Recent AI Interactions
+            {% if recent_thoughts %}
+            <span class="badge bg-secondary ms-2">{{ recent_thoughts|length }}</span>
+            {% endif %}
+        </h5>
+
+        {% if recent_thoughts %}
+        <div class="thoughts-container mt-3">
+            {% for thought in recent_thoughts %}
+            <div class="thought-item mb-3 p-3 border rounded"
+                style="background-color: #2d3238; border-color: #404549 !important;">
+                <div class="thought-meta mb-2">
+                    <span class="badge bg-primary me-2">
+                        {% if thought.category == 'user-input' %}👤{% endif %}
+                        {% if thought.category == 'ai-response' %}🤖{% endif %}
+                        {% if thought.category == 'conversation' %}💬{% endif %}
+                        {% if thought.category == 'reflection' %}🤔{% endif %}
+                        {% if thought.category == 'perception' %}👁️{% endif %}
+                        {% if thought.category == 'decision' %}⚖️{% endif %}
+                        {% if thought.category == 'observation' %}🔍{% endif %}
+                        {% if thought.category == 'idea' %}💡{% endif %}
+                        {% if thought.category == 'question' %}❓{% endif %}
+                        {{ thought.category.upper() }}
+                    </span>
+
+                    <small class="text-muted me-2">
+                        <i class="fas fa-clock"></i>
+                        {{ thought.timestamp.strftime('%Y-%m-%d %H:%M') }}
+                    </small>
+
+                    {% if thought.emotion %}
+                    <span class="badge 
+                        {% if thought.emotion == 'happy' %}bg-success{% endif %}
+                        {% if thought.emotion == 'excited' %}bg-warning{% endif %}
+                        {% if thought.emotion == 'confident' %}bg-info{% endif %}
+                        {% if thought.emotion == 'calm' %}bg-success{% endif %}
+                        {% if thought.emotion == 'neutral' %}bg-secondary{% endif %}
+                        {% if thought.emotion == 'confused' %}bg-warning{% endif %}
+                        {% if thought.emotion == 'anxious' %}bg-danger{% endif %}
+                        {% if thought.emotion == 'frustrated' %}bg-danger{% endif %}
+                        {% if thought.emotion == 'sad' %}bg-danger{% endif %}
+                        {% if thought.emotion == 'positive' %}bg-success{% endif %}
+                        {% if thought.emotion == 'negative' %}bg-danger{% endif %}
+                        {% if thought.emotion == 'curious' %}bg-info{% endif %}
+                        me-2">
+                        {% if thought.emotion == 'happy' %}😊{% endif %}
+                        {% if thought.emotion == 'excited' %}🎉{% endif %}
+                        {% if thought.emotion == 'confident' %}💪{% endif %}
+                        {% if thought.emotion == 'calm' %}�{% endif %}
+                        {% if thought.emotion == 'neutral' %}😐{% endif %}
+                        {% if thought.emotion == 'confused' %}😕{% endif %}
+                        {% if thought.emotion == 'anxious' %}😰{% endif %}
+                        {% if thought.emotion == 'frustrated' %}😤{% endif %}
+                        {% if thought.emotion == 'sad' %}😔{% endif %}
+                        {% if thought.emotion == 'positive' %}😊{% endif %}
+                        {% if thought.emotion == 'negative' %}�{% endif %}
+                        {% if thought.emotion == 'curious' %}🤔{% endif %}
+                        {{ thought.emotion|title }}
+                    </span>
+                    {% endif %}
+
+                    {% if thought.importance %}
+                    <span class="badge 
+                        {% if thought.importance >= 0.7 %}bg-danger{% endif %}
+                        {% if thought.importance >= 0.4 and thought.importance < 0.7 %}bg-warning{% endif %}
+                        {% if thought.importance < 0.4 %}bg-info{% endif %}
+                        me-2">
+                        <i class="fas fa-star"></i> {{ "%.2f"|format(thought.importance) }}
+                    </span>
+                    {% endif %}
+                </div>
+
+                <div class="thought-content">
+                    <a href="/thoughts/{{ thought.id }}" class="text-decoration-none text-light">
+                        {{ thought.content[:200] }}{% if thought.content|length > 200 %}...{% endif %}
+                    </a>
+                </div>
+
+                {% if thought.tags %}
+                <div class="tags mt-2">
+                    {% for tag in thought.tags %}
+                    <span class="badge bg-secondary me-1"># {{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="/thoughts" class="btn btn-outline-primary">
+                <i class="fas fa-list"></i> View All AI Interactions
+            </a>
+            <a href="/chat" class="btn btn-primary ms-2">
+                <i class="fas fa-comments"></i> Start AI Chat
+            </a>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-robot fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">No AI interactions logged yet</h4>
+            <p class="text-muted">Start chatting with AI to begin monitoring interactions</p>
+            <a href="/chat" class="btn btn-primary">
+                <i class="fas fa-comments"></i> Start AI Chat
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .thought-item {
+        background-color: var(--bs-gray-900);
+        border-color: var(--bs-gray-700) !important;
+        transition: background-color 0.2s ease;
+    }
+
+    .thought-item:hover {
+        background-color: var(--bs-gray-800);
+    }
+
+    .thought-content a {
+        color: var(--bs-body-color);
+    }
+
+    .thought-content a:hover {
+        color: var(--bs-primary);
+    }
+
+    .badge {
+        font-size: 0.75rem;
+    }
+
+    .bg-outline-info {
+        color: var(--bs-info);
+        border: 1px solid var(--bs-info);
+        background-color: transparent;
+    }
+</style>
+{% endblock %}

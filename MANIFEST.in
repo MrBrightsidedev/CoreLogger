@@ -1,0 +1,14 @@
+include README.md
+include LICENSE
+include requirements.txt
+include requirements-dev.txt
+include requirements-ai.txt
+recursive-include web/templates *.html
+recursive-include web/static *.css *.js
+recursive-include tests *.py
+global-exclude *.pyc
+global-exclude __pycache__
+global-exclude .git*
+global-exclude .env*
+global-exclude *.log
+global-exclude *.db

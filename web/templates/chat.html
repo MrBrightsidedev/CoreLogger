@@ -1,0 +1,446 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-robot"></i> AI Chat Interface</h5>
+                    <small class="text-muted">Powered by Google Gemini AI</small>
+                </div>
+                <div class="card-body">
+                    <!-- Chat Messages Area -->
+                    <div id="chat-messages" class="chat-container mb-3">
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-comments fa-2x mb-2"></i>
+                            <p class="mb-1">💬 Start a conversation with AI</p>
+                            <small>Ask questions, brainstorm ideas, or get insights!</small>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input Form -->
+                    <form id="chat-form">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label for="provider" class="form-label">AI Provider</label>
+                                <select class="form-select" id="provider" name="provider">
+                                    <option value="gemini" selected>🤖 Google Gemini</option>
+                                    <option value="mock">🎭 Mock (Demo)</option>
+                                    <option value="openai" disabled>🧠 OpenAI GPT (Soon)</option>
+                                    <option value="claude" disabled>🎨 Anthropic Claude (Soon)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check mt-4">
+                                    <input class="form-check-input" type="checkbox" id="streaming" name="streaming"
+                                        checked>
+                                    <label class="form-check-label" for="streaming">
+                                        <i class="fas fa-stream"></i> Real-time streaming
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check mt-4">
+                                    <input class="form-check-input" type="checkbox" id="save-chat" name="save-chat"
+                                        checked>
+                                    <label class="form-check-label" for="save-chat">
+                                        <i class="fas fa-save"></i> Save to thoughts
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check mt-4">
+                                    <input class="form-check-input" type="checkbox" id="show-thinking"
+                                        name="show-thinking">
+                                    <label class="form-check-label" for="show-thinking">
+                                        <i class="fas fa-brain"></i> Show AI thinking
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="message-input"
+                                placeholder="Type your message... (Press Enter to send)" required>
+                            <button class="btn btn-primary" type="submit" id="send-button">
+                                <i class="fas fa-paper-plane"></i> Send
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h6><i class="fas fa-bolt"></i> Quick Actions</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="button" class="btn btn-outline-secondary btn-sm"
+                            onclick="sendQuickMessage('Help me reflect on my day and identify key insights')">
+                            📝 Daily Reflection
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm"
+                            onclick="sendQuickMessage('I need help brainstorming creative ideas for my project')">
+                            💡 Brainstorm Ideas
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm"
+                            onclick="sendQuickMessage('What should I focus on today to be most productive?')">
+                            🎯 Daily Focus
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm"
+                            onclick="sendQuickMessage('Can you help me analyze my recent thoughts and find patterns?')">
+                            📊 Pattern Analysis
+                        </button>
+                        <button type="button" class="btn btn-outline-warning btn-sm" onclick="clearChat()">
+                            <i class="fas fa-trash"></i> Clear Chat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .chat-container {
+        height: 500px;
+        overflow-y: auto;
+        border: 1px solid var(--bs-gray-700);
+        padding: 20px;
+        background-color: var(--bs-gray-900);
+        border-radius: 0.375rem;
+        scroll-behavior: smooth;
+    }
+
+    .chat-message {
+        margin-bottom: 1rem;
+        animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .message-bubble {
+        max-width: 80%;
+        padding: 12px 16px;
+        border-radius: 18px;
+        word-wrap: break-word;
+        line-height: 1.4;
+    }
+
+    .user-message .message-bubble {
+        background: linear-gradient(135deg, var(--bs-primary), #0056b3);
+        color: white;
+        margin-left: auto;
+    }
+
+    .ai-message .message-bubble {
+        background-color: var(--bs-gray-800);
+        border: 1px solid var(--bs-gray-700);
+        color: var(--text-primary);
+    }
+
+    .message-content {
+        color: var(--text-primary) !important;
+    }
+
+    .message-meta {
+        font-size: 0.75rem;
+        color: var(--bs-gray-500);
+        margin-top: 4px;
+    }
+
+    .typing-indicator {
+        display: flex;
+        align-items: center;
+        padding: 8px 16px;
+        background-color: var(--bs-gray-800);
+        border-radius: 18px;
+        max-width: 100px;
+    }
+
+    .typing-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--bs-gray-500);
+        margin: 0 2px;
+        animation: typing 1.4s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .typing-dot:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes typing {
+
+        0%,
+        60%,
+        100% {
+            transform: translateY(0);
+            opacity: 0.5;
+        }
+
+        30% {
+            transform: translateY(-10px);
+            opacity: 1;
+        }
+    }
+
+    .provider-badge {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 10px;
+    }
+
+    .chat-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .chat-container::-webkit-scrollbar-track {
+        background: var(--bs-gray-800);
+        border-radius: 3px;
+    }
+
+    .chat-container::-webkit-scrollbar-thumb {
+        background: var(--bs-gray-600);
+        border-radius: 3px;
+    }
+
+    .chat-container::-webkit-scrollbar-thumb:hover {
+        background: var(--bs-gray-500);
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const chatForm = document.getElementById('chat-form');
+        const messageInput = document.getElementById('message-input');
+        const chatMessages = document.getElementById('chat-messages');
+        const sendButton = document.getElementById('send-button');
+
+        // Handle form submission
+        chatForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            sendMessage();
+        });
+
+        // Handle Enter key
+        messageInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            const provider = document.getElementById('provider').value;
+            const streaming = document.getElementById('streaming').checked;
+            const saveChat = document.getElementById('save-chat').checked;
+            const showThinking = document.getElementById('show-thinking').checked;
+
+            // Add user message to chat
+            addMessageToChat('You', message, 'user');
+
+            // Clear input and show loading state
+            messageInput.value = '';
+            setLoadingState(true);
+
+            try {
+                if (provider === 'gemini') {
+                    // Real Gemini API call
+                    await sendToGeminiAPI(message, streaming, saveChat, showThinking);
+                } else {
+                    // Mock response for demo
+                    await sendMockResponse(message, provider);
+                }
+            } catch (error) {
+                console.error('Chat error:', error);
+                addMessageToChat('System', 'Sorry, there was an error processing your message. Please try again.', 'error');
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        async function sendToGeminiAPI(message, streaming, saveChat, showThinking) {
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        provider: 'gemini',
+                        streaming: streaming,
+                        save_chat: saveChat,
+                        show_thinking: showThinking
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    addMessageToChat('Gemini AI', data.response, 'ai');
+
+                    if (data.thinking && showThinking) {
+                        addThinkingProcess(data.thinking);
+                    }
+                } else {
+                    throw new Error(data.error || 'Unknown error occurred');
+                }
+            } catch (error) {
+                console.error('Gemini API error:', error);
+                addMessageToChat('System', `Error: ${error.message}. Check your API key configuration.`, 'error');
+            }
+        }
+
+        async function sendMockResponse(message, provider) {
+            // Show typing indicator
+            const typingId = showTypingIndicator();
+
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            hideTypingIndicator(typingId);
+
+            const mockResponses = [
+                `This is a simulated response from ${provider}. In the full implementation, this would connect to the actual AI APIs.`,
+                `I understand you're asking about: "${message}". This is a demo response to show the interface functionality.`,
+                `Great question! This mock response demonstrates how the chat interface would work with real AI providers.`,
+                `I'm a demo AI response. The real ${provider} integration would provide much more sophisticated responses.`
+            ];
+
+            const response = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+            addMessageToChat(`${provider.toUpperCase()} (Demo)`, response, 'ai');
+        }
+
+        function addMessageToChat(sender, message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${type === 'user' ? 'text-end' : 'text-start'}`;
+
+            const senderBadge = type === 'user' ?
+                '<span class="badge bg-primary provider-badge">You</span>' :
+                type === 'error' ?
+                    '<span class="badge bg-danger provider-badge">System</span>' :
+                    `<span class="badge bg-success provider-badge">${sender}</span>`;
+
+            messageDiv.innerHTML = `
+            <div class="${type}-message d-flex ${type === 'user' ? 'justify-content-end' : 'justify-content-start'}">
+                <div class="message-bubble">
+                    <div class="message-meta mb-1">${senderBadge}</div>
+                    <div class="message-content">${message}</div>
+                    <div class="message-meta text-end mt-1">${new Date().toLocaleTimeString()}</div>
+                </div>
+            </div>
+        `;
+
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            const typingId = 'typing-' + Date.now();
+            typingDiv.id = typingId;
+            typingDiv.className = 'chat-message';
+
+            typingDiv.innerHTML = `
+            <div class="ai-message d-flex justify-content-start">
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+        `;
+
+            chatMessages.appendChild(typingDiv);
+            scrollToBottom();
+            return typingId;
+        }
+
+        function hideTypingIndicator(typingId) {
+            const typingElement = document.getElementById(typingId);
+            if (typingElement) {
+                typingElement.remove();
+            }
+        }
+
+        function addThinkingProcess(thinking) {
+            const thinkingDiv = document.createElement('div');
+            thinkingDiv.className = 'chat-message';
+            thinkingDiv.innerHTML = `
+            <div class="ai-message d-flex justify-content-start">
+                <div class="message-bubble" style="background-color: var(--bs-gray-800); border: 1px dashed var(--bs-gray-600);">
+                    <div class="message-meta mb-1">
+                        <span class="badge bg-info provider-badge"><i class="fas fa-brain"></i> AI Thinking</span>
+                    </div>
+                    <div class="message-content"><small>${thinking}</small></div>
+                </div>
+            </div>
+        `;
+            chatMessages.appendChild(thinkingDiv);
+            scrollToBottom();
+        }
+
+        function setLoadingState(loading) {
+            sendButton.disabled = loading;
+            sendButton.innerHTML = loading ?
+                '<i class="fas fa-spinner fa-spin"></i> Sending...' :
+                '<i class="fas fa-paper-plane"></i> Send';
+            messageInput.disabled = loading;
+
+            if (!loading) {
+                messageInput.focus();
+            }
+        }
+
+        function scrollToBottom() {
+            setTimeout(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 100);
+        }
+
+        // Initialize
+        messageInput.focus();
+    });
+
+    function sendQuickMessage(message) {
+        document.getElementById('message-input').value = message;
+        document.getElementById('chat-form').dispatchEvent(new Event('submit'));
+    }
+
+    function clearChat() {
+        const chatMessages = document.getElementById('chat-messages');
+        chatMessages.innerHTML = `
+        <div class="text-center text-muted py-4">
+            <i class="fas fa-comments fa-2x mb-2"></i>
+            <p class="mb-1">💬 Start a conversation with AI</p>
+            <small>Ask questions, brainstorm ideas, or get insights!</small>
+        </div>
+    `;
+    }
+</script>
+{% endblock %}

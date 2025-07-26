@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-list"></i> AI Interactions</h2>
+    <div>
+        <a href="/chat" class="btn btn-primary">
+            <i class="fas fa-comments"></i> Start AI Chat
+        </a>
+        <a href="/search" class="btn btn-outline-secondary ms-2">
+            <i class="fas fa-search"></i> Advanced Search
+        </a>
+    </div>
+</div>
+
+{% if filters.search or filters.category or filters.tag %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h6><i class="fas fa-filter"></i> Active Filters:</h6>
+        <div class="d-flex flex-wrap gap-2">
+            {% if filters.search %}
+            <span class="badge bg-info">Search: "{{ filters.search }}"</span>
+            {% endif %}
+            {% if filters.category %}
+            <span class="badge bg-primary">Category: {{ filters.category|title }}</span>
+            {% endif %}
+            {% if filters.tag %}
+            <span class="badge bg-secondary">Tag: {{ filters.tag }}</span>
+            {% endif %}
+            <a href="/thoughts" class="badge bg-danger text-decoration-none">
+                <i class="fas fa-times"></i> Clear All
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if thoughts %}
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5>Found {{ total_thoughts }} thought{{ 's' if total_thoughts != 1 else '' }}</h5>
+            <small class="text-muted">
+                Page {{ current_page }} of {{ total_pages }}
+            </small>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-striped">
+                <thead>
+                    <tr>
+                        <th width="5%">#</th>
+                        <th width="40%">Content</th>
+                        <th width="12%">Category</th>
+                        <th width="10%">Emotion</th>
+                        <th width="8%">Sentiment</th>
+                        <th width="10%">Importance</th>
+                        <th width="15%">Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for thought in thoughts %}
+                    <tr>
+                        <td>{{ ((current_page - 1) * 20) + loop.index }}</td>
+                        <td>
+                            <div class="thought-content">
+                                <a href="/thoughts/{{ thought.id }}" class="text-decoration-none text-light">
+                                    {{ thought.content[:150] }}{% if thought.content|length > 150 %}...{% endif %}
+                                </a>
+                            </div>
+                            {% if thought.tags %}
+                            <div class="mt-1">
+                                {% for tag in thought.tags %}
+                                <span class="badge bg-secondary me-1"># {{ tag }}</span>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge bg-primary">
+                                {% if thought.category == 'user-input' %}👤{% endif %}
+                                {% if thought.category == 'ai-response' %}🤖{% endif %}
+                                {% if thought.category == 'conversation' %}💬{% endif %}
+                                {% if thought.category == 'reflection' %}🤔{% endif %}
+                                {% if thought.category == 'perception' %}👁️{% endif %}
+                                {% if thought.category == 'decision' %}⚖️{% endif %}
+                                {% if thought.category == 'observation' %}🔍{% endif %}
+                                {% if thought.category == 'idea' %}💡{% endif %}
+                                {% if thought.category == 'question' %}❓{% endif %}
+                                {{ thought.category|title }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if thought.emotion %}
+                            <span class="badge 
+                                {% if thought.emotion == 'happy' %}bg-success{% endif %}
+                                {% if thought.emotion == 'excited' %}bg-warning{% endif %}
+                                {% if thought.emotion == 'confident' %}bg-info{% endif %}
+                                {% if thought.emotion == 'calm' %}bg-success{% endif %}
+                                {% if thought.emotion == 'neutral' %}bg-secondary{% endif %}
+                                {% if thought.emotion == 'confused' %}bg-warning{% endif %}
+                                {% if thought.emotion == 'anxious' %}bg-danger{% endif %}
+                                {% if thought.emotion == 'frustrated' %}bg-danger{% endif %}
+                                {% if thought.emotion == 'sad' %}bg-danger{% endif %}
+                                {% if thought.emotion == 'positive' %}bg-success{% endif %}
+                                {% if thought.emotion == 'negative' %}bg-danger{% endif %}
+                                {% if thought.emotion == 'curious' %}bg-info{% endif %}
+                            ">
+                                {% if thought.emotion == 'happy' %}�{% endif %}
+                                {% if thought.emotion == 'excited' %}🎉{% endif %}
+                                {% if thought.emotion == 'confident' %}💪{% endif %}
+                                {% if thought.emotion == 'calm' %}😌{% endif %}
+                                {% if thought.emotion == 'neutral' %}😐{% endif %}
+                                {% if thought.emotion == 'confused' %}😕{% endif %}
+                                {% if thought.emotion == 'anxious' %}😰{% endif %}
+                                {% if thought.emotion == 'frustrated' %}😤{% endif %}
+                                {% if thought.emotion == 'sad' %}😔{% endif %}
+                                {% if thought.emotion == 'positive' %}😊{% endif %}
+                                {% if thought.emotion == 'negative' %}😔{% endif %}
+                                {% if thought.emotion == 'curious' %}🤔{% endif %}
+                                {{ thought.emotion|title }}
+                            </span>
+                            {% else %}
+                            <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if thought.sentiment_score %}
+                            <span class="badge 
+                                {% if thought.sentiment_score > 0.1 %}bg-success{% endif %}
+                                {% if thought.sentiment_score < -0.1 %}bg-danger{% endif %}
+                                {% if thought.sentiment_score >= -0.1 and thought.sentiment_score <= 0.1 %}bg-secondary{% endif %}
+                            ">
+                                {{ thought.sentiment_score|round(2) }}
+                            </span>
+                            {% else %}
+                            <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if thought.importance %}
+                            <div class="progress" style="height: 20px;">
+                                {% set importance_class = 'bg-info' %}
+                                {% if thought.importance >= 0.7 %}
+                                {% set importance_class = 'bg-danger' %}
+                                {% elif thought.importance >= 0.4 %}
+                                {% set importance_class = 'bg-warning' %}
+                                {% endif %}
+                                <div class="progress-bar {{ importance_class }}" role="progressbar"
+                                    data-width="{{ (thought.importance * 100)|round(0) }}">
+                                    {{ thought.importance|round(1) }}
+                                </div>
+                            </div>
+                            {% else %}
+                            <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <small class="text-muted">
+                                {{ thought.created_at.strftime('%m/%d %H:%M') if thought.created_at else
+                                thought.timestamp.strftime('%m/%d %H:%M') }}
+                            </small>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if total_pages > 1 %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if current_page > 1 %}
+                <li class="page-item">
+                    <a class="page-link"
+                        href="?page={{ current_page - 1 }}{% if filters.search %}&search={{ filters.search }}{% endif %}{% if filters.category %}&category={{ filters.category }}{% endif %}{% if filters.tag %}&tag={{ filters.tag }}{% endif %}">Previous</a>
+                </li>
+                {% endif %}
+
+                {% for page_num in range(1, total_pages + 1) %}
+                {% if page_num == current_page %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                </li>
+                {% elif page_num <= 3 or page_num> total_pages - 3 or (page_num >= current_page - 1 and page_num <=
+                        current_page + 1) %} <li class="page-item">
+                        <a class="page-link"
+                            href="?page={{ page_num }}{% if filters.search %}&search={{ filters.search }}{% endif %}{% if filters.category %}&category={{ filters.category }}{% endif %}{% if filters.tag %}&tag={{ filters.tag }}{% endif %}">{{
+                            page_num }}</a>
+                        </li>
+                        {% elif page_num == 4 or page_num == total_pages - 3 %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if current_page < total_pages %} <li class="page-item">
+                            <a class="page-link"
+                                href="?page={{ current_page + 1 }}{% if filters.search %}&search={{ filters.search }}{% endif %}{% if filters.category %}&category={{ filters.category }}{% endif %}{% if filters.tag %}&tag={{ filters.tag }}{% endif %}">Next</a>
+                            </li>
+                            {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% else %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">No AI interactions found</h4>
+        {% if filters.search or filters.category or filters.tag %}
+        <p class="text-muted">Try adjusting your search criteria</p>
+        <a href="/thoughts" class="btn btn-secondary">View All AI Interactions</a>
+        {% else %}
+        <p class="text-muted">Start chatting with AI to begin logging interactions</p>
+        <a href="/chat" class="btn btn-primary">
+            <i class="fas fa-comments"></i> Start AI Chat
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<style>
+    .thought-content a {
+        color: var(--text-primary);
+    }
+
+    .thought-content a:hover {
+        color: var(--accent-blue);
+    }
+
+    .pagination .page-link {
+        background-color: var(--secondary-bg);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .pagination .page-link:hover {
+        background-color: var(--tertiary-bg);
+        border-color: var(--accent-blue);
+        color: var(--accent-blue);
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: var(--accent-blue);
+        border-color: var(--accent-blue);
+    }
+</style>
+
+<script>
+    // Set progress bar widths from data attributes to avoid CSS parser issues
+    document.addEventListener('DOMContentLoaded', function () {
+        const progressBars = document.querySelectorAll('.progress-bar[data-width]');
+        progressBars.forEach(function (bar) {
+            const width = bar.getAttribute('data-width');
+            if (width) {
+                bar.style.width = width + '%';
+            }
+        });
+    });
+</script>
+{% endblock %}

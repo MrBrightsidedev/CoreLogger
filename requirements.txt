@@ -1,0 +1,52 @@
+# Core web framework and API
+fastapi[all]>=0.115.0
+uvicorn[standard]>=0.32.0
+jinja2>=3.1.0
+
+# CLI framework
+typer[all]>=0.12.0
+
+# Database and ORM
+sqlalchemy>=2.0.36
+
+# Data validation and settings
+pydantic>=2.10.0
+pydantic-settings>=2.6.0
+
+# Console output and environment
+rich>=13.9.0
+python-dotenv>=1.0.1
+python-multipart>=0.0.12
+
+# HTTP client for testing
+httpx>=0.28.0
+
+# AI Providers (Optional)
+google-generativeai>=0.8.0
+openai>=1.54.0
+anthropic>=0.39.0
+
+# NLP Dependencies for Enhanced Analysis
+textblob>=0.17.1
+nltk>=3.8.1
+
+# Core dependencies (compatibility fixes)
+typing-extensions~=4.13.2
+urllib3~=2.4.0
+
+# Testing framework
+pytest>=8.3.0
+pytest-asyncio>=0.24.0
+pytest-cov>=6.0.0
+
+# Code formatting and linting
+black>=24.10.0
+isort>=5.13.2
+mypy>=1.13.0
+
+# Git hooks
+pre-commit>=4.0.0
+
+# AI Chat Providers (optional - install only if you want to use real AI models)
+google-generativeai>=0.8.3
+openai>=1.59.0
